@@ -44,6 +44,7 @@ function playGame() {
             const x = prompt(`enter x coord`);
             const y = prompt(`enter y coord`);
             human.makeMove(x, y);
+            console.log('human move')
             isHumanTurn = false;
         } else if (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
             while (!checkStatus(gameBoard.gameArray) && !positionFound) {
@@ -51,11 +52,12 @@ function playGame() {
                 const y = rnd(3);
                 if (gameBoard.gameArray[x][y] === null) {
                     CPU.makeMove(x, y);
+                    console.log('cpu move')
                     positionFound = true;
-                    isHumanTurn = true;
                     break;
                 }
             }
+            isHumanTurn = true;
         }
         else if (checkStatus(gameBoard.gameArray)) {
             console.log(`game over!`);
