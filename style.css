@@ -12,7 +12,7 @@ body {
     height: 100vh;
     width: 100vw;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 .gameContainer {
@@ -39,5 +39,18 @@ body {
 .marker {
     width: 100%;
     height: 100%;
-    box-shadow: 5px 5px 5px 5px rgba(50, 50, 50, .75);
+    box-shadow: 5px 5px 5px 5px rgba(50, 50, 50, .5);
+    background-color: rgba(antiquewhite, .5);
+}
+
+.gameHeader {
+    font-size: 100px;
+    box-shadow: 5px 5px 5px 5px rgba(100, 100, 100, .5);
+}
+
+.message {
+    text-align: center;
+    height: 50px;
+    width: 500px;
+    visibility: hidden;
 }

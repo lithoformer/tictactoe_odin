@@ -59,6 +59,9 @@ const render = (function () {
     cc.classList.add('boardSpace');
     gameContainer.appendChild(cc);
 
+    const gameHeader = document.querySelector('.gameHeader')
+    gameHeader.textContent = `Tic-Tac-Toe!`;
+
     const board = document.querySelectorAll('.boardSpace');
 
     for (item of board) {
@@ -88,8 +91,11 @@ const playGame = (function () {
     const body = document.querySelector('body');
     const human = new Player('human', [], gameBoard.gameArray);
     const CPU = new Player('CPU', [], gameBoard.gameArray);
+    let name = prompt('Please enter your name!');
+    if (name === null || name === '' || name === undefined) {
+        name = `Player1`;
+    }
     let isHumanTurn = true;
-    let positionCPU = false;
     let positionHuman = false;
     for (item of render.board) {
         item.addEventListener('click', (event) => {
@@ -122,11 +128,53 @@ const playGame = (function () {
                     o.style.fontSize = `150px`;
                     o.style.fontWeight = `bold`;
                     o.style.textAlign = `center`;
-                    positionCPU = CPU.makeMove(x, y);
+                    CPU.makeMove(x, y);
                     const pos = document.querySelector(`.\\3${x} ${y}`);
                     pos.appendChild(o);
                     isHumanTurn = !isHumanTurn;
                     gameBoard.drawBoard(CPU);
+                }
+            }
+            if ({ a, b, c } = checkStatus(gameBoard.gameArray)) {
+                if (a === `draw`) {
+                    for (item of render.board) {
+                        item.style.backgroundColor = 'steelblue';
+                        item.style.opacity = .75;
+                    }
+                    const message = document.querySelector('.message');
+                    message.textContent = 'the game ends in a draw!'
+                    message.style.fontSize = `3rem`;
+                    message.style.visibility = `visible`;
+                }
+                else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
+                    const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
+                    first.style.backgroundColor = 'goldenrod';
+                    first.style.opacity = .5;
+                    const second = document.querySelector(`.\\3${b[0]} ${b[1]}`);
+                    second.style.backgroundColor = 'goldenrod';
+                    second.style.opacity = .5;
+                    const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
+                    third.style.backgroundColor = 'goldenrod';
+                    third.style.opacity = .5;
+                    const message = document.querySelector('.message');
+                    message.style.fontSize = `3rem`;
+                    message.style.visibility = `visible`;
+                    message.textContent = `${name} wins the game!`;
+                }
+                else {
+                    const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
+                    first.style.backgroundColor = 'steelblue';
+                    first.style.opacity = .5;
+                    const second = document.querySelector(`.\\3${b[0]} ${b[1]}`);
+                    second.style.backgroundColor = 'steelblue';
+                    second.style.opacity = .5;
+                    const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
+                    third.style.backgroundColor = 'steelblue';
+                    third.style.opacity = .5;
+                    const message = document.querySelector('.message');
+                    message.style.fontSize = `3rem`;
+                    message.style.visibility = `visible`;
+                    message.textContent = `the computer wins the game!`;
                 }
             }
         })
@@ -145,6 +193,10 @@ const playGame = (function () {
                 gameBoard.gameArray[i][j] = null;
             }
         }
+        for (item of render.board) {
+            item.style.backgroundColor = 'white';
+            item.style.opacity = 1;
+        }
         human.moves.splice(0, human.moves.length);
         CPU.moves.splice(0, CPU.moves.length);
         isHumanTurn = true;
@@ -154,23 +206,23 @@ const playGame = (function () {
 
 function checkStatus(gameArray) {
     if (gameArray[0][0] === gameArray[0][1] && gameArray[0][0] === gameArray[0][2] && gameArray[0][0] !== null) {
-        return true;
+        return { a: [0, 0], b: [0, 1], c: [0, 2] };
     } else if (gameArray[1][0] === gameArray[1][1] && gameArray[1][0] === gameArray[1][2] && gameArray[1][0] !== null) {
-        return true;
+        return { a: [1, 0], b: [1, 1], c: [1, 2] };
     } else if (gameArray[2][0] === gameArray[2][1] && gameArray[2][0] === gameArray[2][2] && gameArray[2][0] !== null) {
-        return true;
+        return { a: [2, 0], b: [2, 1], c: [2, 2] };
     } else if (gameArray[0][0] === gameArray[1][0] && gameArray[0][0] === gameArray[2][0] && gameArray[0][0] !== null) {
-        return true;
+        return { a: [0, 0], b: [1, 0], c: [2, 0] };
     } else if (gameArray[0][1] === gameArray[1][1] && gameArray[0][1] === gameArray[2][1] && gameArray[0][1] !== null) {
-        return true;
+        return { a: [0, 1], b: [1, 1], c: [2, 1] };
     } else if (gameArray[0][2] === gameArray[1][2] && gameArray[0][2] === gameArray[2][2] && gameArray[0][2] !== null) {
-        return true;
+        return { a: [0, 2], b: [1, 2], c: [2, 2] };
     } else if (gameArray[0][0] === gameArray[1][1] && gameArray[0][0] === gameArray[2][2] && gameArray[0][0] !== null) {
-        return true;
+        return { a: [0, 0], b: [1, 1], c: [2, 2] };
     } else if (gameArray[2][0] === gameArray[1][1] && gameArray[2][0] === gameArray[0][2] && gameArray[2][0] !== null) {
-        return true;
+        return { a: [2, 0], b: [1, 1], c: [0, 2] };
     } else if (gameArray[0][0] !== null && gameArray[0][1] !== null && gameArray[0][2] !== null && gameArray[1][0] !== null && gameArray[1][1] !== null && gameArray[1][2] !== null && gameArray[2][0] !== null && gameArray[2][1] !== null && gameArray[2][2] !== null) {
-        return true;
+        return { a: `draw`, b: `draw`, c: `draw` };
     } else {
         return false;
     }
