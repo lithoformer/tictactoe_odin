@@ -141,97 +141,96 @@ const playGame = (function () {
     let positionHuman = false;
     for (item of render.board) {
         item.addEventListener('click', (event) => {
-            const move = event.currentTarget.getAttribute('class');
-            while (!checkStatus(gameBoard.gameArray) && isHumanTurn) {
-                positionHuman = human.makeMove(move[0], move[1]);
-                if (positionHuman) {
-                    const x = document.createElement('span');
-                    x.classList.add('marker');
-                    x.display = `flex`;
-                    x.textContent = 'X';
-                    x.style.fontSize = `150px`;
-                    x.style.fontWeight = `bold`;
-                    x.style.textAlign = `center`;
-                    event.currentTarget.appendChild(x);
-                    isHumanTurn = !isHumanTurn;
-                    gameBoard.drawBoard(human);
-                    render.gameContainer.classList.remove(`apply-shake`);
-                }
-                else {
-                    break;
-                }
-            }
-            while (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
-                const x = rnd(3);
-                const y = rnd(3);
-                if (gameBoard.gameArray[x][y] === null) {
-                    const o = document.createElement('span');
-                    o.classList.add('marker');
-                    o.textContent = 'O';
-                    o.style.fontSize = `150px`;
-                    o.style.fontWeight = `bold`;
-                    o.style.textAlign = `center`;
-                    CPU.makeMove(x, y);
-                    const pos = document.querySelector(`.\\3${x} ${y}`);
-                    pos.appendChild(o);
-                    isHumanTurn = !isHumanTurn;
-                    gameBoard.drawBoard(CPU);
-                }
-            }
-            if ({ a, b, c } = checkStatus(gameBoard.gameArray)) {
-                if (a === `draw`) {
-                    for (item of render.board) {
-                        item.style.backgroundColor = 'steelblue';
-                        item.style.opacity = .75;
+            if (!gameOver) {
+                const move = event.currentTarget.getAttribute('class');
+                while (!checkStatus(gameBoard.gameArray) && isHumanTurn) {
+                    positionHuman = human.makeMove(move[0], move[1]);
+                    if (positionHuman) {
+                        const x = document.createElement('span');
+                        x.classList.add('marker');
+                        x.display = `flex`;
+                        x.textContent = 'X';
+                        x.style.fontSize = `150px`;
+                        x.style.fontWeight = `bold`;
+                        x.style.textAlign = `center`;
+                        event.currentTarget.appendChild(x);
+                        isHumanTurn = !isHumanTurn;
+                        gameBoard.drawBoard(human);
+                        render.gameContainer.classList.remove(`apply-shake`);
                     }
-                    message.textContent = `the game ends in a draw!  Please enter your name:`;
-                    message.style.fontSize = `3rem`;
-                    message.style.visibility = `visible`;
-                    nameField.style.visibility = 'visible';
-                    start.textContent = 'Start!'
-                    gameOver = !gameOver;
+                    else {
+                        break;
+                    }
                 }
-                else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
-                    const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
-                    first.style.backgroundColor = 'goldenrod';
-                    first.style.opacity = .5;
-                    const second = document.querySelector(`.\\3${b[0]} ${b[1]}`);
-                    second.style.backgroundColor = 'goldenrod';
-                    second.style.opacity = .5;
-                    const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
-                    third.style.backgroundColor = 'goldenrod';
-                    third.style.opacity = .5;
-                    message.style.fontSize = `3rem`;
-                    message.style.visibility = `visible`;
-                    message.textContent = `${playerName} wins the game!  Please enter your name:`;
-                    nameField.style.visibility = 'visible';
-                    start.textContent = 'Start!'
-                    gameOver = !gameOver;
+                while (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
+                    const x = rnd(3);
+                    const y = rnd(3);
+                    if (gameBoard.gameArray[x][y] === null) {
+                        const o = document.createElement('span');
+                        o.classList.add('marker');
+                        o.textContent = 'O';
+                        o.style.fontSize = `150px`;
+                        o.style.fontWeight = `bold`;
+                        o.style.textAlign = `center`;
+                        CPU.makeMove(x, y);
+                        const pos = document.querySelector(`.\\3${x} ${y}`);
+                        pos.appendChild(o);
+                        isHumanTurn = !isHumanTurn;
+                        gameBoard.drawBoard(CPU);
+                    }
                 }
-                else {
-                    const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
-                    first.style.backgroundColor = 'steelblue';
-                    first.style.opacity = .5;
-                    const second = document.querySelector(`.\\3${b[0]} ${b[1]}`);
-                    second.style.backgroundColor = 'steelblue';
-                    second.style.opacity = .5;
-                    const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
-                    third.style.backgroundColor = 'steelblue';
-                    third.style.opacity = .5;
-                    event.currentTarget.style.backgroundColor = 'white';
-                    event.currentTarget.style.opacity = 1;
-                    message.style.fontSize = `3rem`;
-                    message.style.visibility = `visible`;
-                    message.textContent = `the computer wins the game!  Please enter your name:`;
-                    nameField.style.visibility = 'visible';
-                    start.textContent = 'Start!'
-                    gameOver = !gameOver;
+                if ({ a, b, c } = checkStatus(gameBoard.gameArray)) {
+                    if (a === `draw`) {
+                        for (item of render.board) {
+                            item.style.backgroundColor = 'steelblue';
+                            item.style.opacity = .75;
+                        }
+                        message.textContent = `the game ends in a draw!  Please enter your name:`;
+                        message.style.fontSize = `3rem`;
+                        message.style.visibility = `visible`;
+                        nameField.style.visibility = 'visible';
+                        start.textContent = 'Start!'
+                        gameOver = !gameOver;
+                    }
+                    else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
+                        const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
+                        first.style.backgroundColor = 'goldenrod';
+                        first.style.opacity = .5;
+                        const second = document.querySelector(`.\\3${b[0]} ${b[1]}`);
+                        second.style.backgroundColor = 'goldenrod';
+                        second.style.opacity = .5;
+                        const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
+                        third.style.backgroundColor = 'goldenrod';
+                        third.style.opacity = .5;
+                        message.style.fontSize = `3rem`;
+                        message.style.visibility = `visible`;
+                        message.textContent = `${playerName} wins the game!  Please enter your name:`;
+                        nameField.style.visibility = 'visible';
+                        start.textContent = 'Start!'
+                        gameOver = !gameOver;
+                    }
+                    else {
+                        const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
+                        first.style.backgroundColor = 'steelblue';
+                        first.style.opacity = .5;
+                        const second = document.querySelector(`.\\3${b[0]} ${b[1]}`);
+                        second.style.backgroundColor = 'steelblue';
+                        second.style.opacity = .5;
+                        const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
+                        third.style.backgroundColor = 'steelblue';
+                        third.style.opacity = .5;
+                        message.style.fontSize = `3rem`;
+                        message.style.visibility = `visible`;
+                        message.textContent = `the computer wins the game!  Please enter your name:`;
+                        nameField.style.visibility = 'visible';
+                        start.textContent = 'Start!'
+                        gameOver = !gameOver;
+                    }
                 }
             }
         })
 
         item.addEventListener('mouseenter', (event) => {
-            console.log(playerName);
             if (!gameOver) {
                 event.currentTarget.style.backgroundColor = 'slategrey';
                 event.currentTarget.style.opacity = .5;
@@ -239,7 +238,6 @@ const playGame = (function () {
         })
 
         item.addEventListener('mouseleave', (event) => {
-            console.log(playerName);
             if (!gameOver) {
                 event.currentTarget.style.backgroundColor = 'white';
                 event.currentTarget.style.opacity = 1;
