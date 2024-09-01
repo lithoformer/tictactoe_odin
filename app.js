@@ -31,10 +31,9 @@ function Player(type, moves, gameArray) {
     }
 }
 
-const human = new Player('human', [], gameBoard.gameArray);
-const CPU = new Player('CPU', [], gameBoard.gameArray);
-
-function playGame() {
+const playGame = (function () {
+    const human = new Player('human', [], gameBoard.gameArray);
+    const CPU = new Player('CPU', [], gameBoard.gameArray);
     let isHumanTurn = false;
     let positionFound = false;
     while (!checkStatus(gameBoard.gameArray)) {
@@ -61,8 +60,9 @@ function playGame() {
         if (checkStatus(gameBoard.gameArray)) {
             console.log(`game over!`);
         }
+        console.log(gameBoard.gameArray)
     }
-};
+})();
 
 function checkStatus(gameArray) {
     if (gameArray[0][0] === gameArray[0][1] && gameArray[0][0] === gameArray[0][2] && gameArray[0][0] !== null) {
@@ -91,5 +91,3 @@ function checkStatus(gameArray) {
 function rnd(val) {
     return Math.floor(Math.random() * val);
 }
-
-playGame();
