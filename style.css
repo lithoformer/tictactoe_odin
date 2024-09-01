@@ -55,6 +55,13 @@ body {
     visibility: hidden;
 }
 
+.nameField {
+    text-align: center;
+    height: 50px;
+    width: 500px;
+    visibility: hidden;
+}
+
 .boardSpace {
     transition: 1s;
 }

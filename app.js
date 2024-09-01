@@ -89,15 +89,48 @@ function Player(type, moves, gameArray) {
 
 const playGame = (function () {
     const body = document.querySelector('body');
+
     const human = new Player('human', [], gameBoard.gameArray);
     const CPU = new Player('CPU', [], gameBoard.gameArray);
-    let name = prompt('Please enter your name!');
-    if (name === null || name === '' || name === undefined) {
-        name = `Player1`;
-    }
+    let gameOver = false;
+    const reset = document.createElement('button');
+    reset.style.marginTop = `50px`;
+    reset.textContent = `Reset`;
+    reset.style.fontSize = `50px`;
+    reset.classList.add('btn');
+    reset.addEventListener('click', () => {
+        const markers = document.querySelectorAll('.marker');
+        for (mark of markers) {
+            mark.remove();
+        }
+        for (let i = 0; i < gameBoard.gameArray.length; i++) {
+            for (let j = 0; j < gameBoard.gameArray.length; j++) {
+                gameBoard.gameArray[i][j] = null;
+            }
+        }
+        for (item of render.board) {
+            item.style.backgroundColor = 'white';
+            item.style.opacity = 1;
+        }
+        human.moves.splice(0, human.moves.length);
+        CPU.moves.splice(0, CPU.moves.length);
+        isHumanTurn = true;
+        gameOver = false;
+    })
+    // const message = document.querySelector('.message');
+    // message.style.visiblity = 'visible';
+    // message.textContent = 'Please enter your name:'
+    // const nameField = document.querySelector('.nameField');
+    // nameField.style.visibility = 'visible';
+    // reset.textContent = 'Start!';
+    // if (nameField.value === null || nameField.value === '' || nameField.value === undefined) {
+    //     let name = `Player1`;
+    // }
+    body.appendChild(reset);
+
+    const message = document.querySelector('.message');
     let isHumanTurn = true;
     let positionHuman = false;
-    let gameOver = false;
     for (item of render.board) {
         item.addEventListener('click', (event) => {
             const move = event.currentTarget.getAttribute('class');
@@ -143,7 +176,6 @@ const playGame = (function () {
                         item.style.backgroundColor = 'steelblue';
                         item.style.opacity = .75;
                     }
-                    const message = document.querySelector('.message');
                     message.textContent = 'the game ends in a draw!'
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
@@ -159,7 +191,6 @@ const playGame = (function () {
                     const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
                     third.style.backgroundColor = 'goldenrod';
                     third.style.opacity = .5;
-                    const message = document.querySelector('.message');
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
                     message.textContent = `${name} wins the game!`;
@@ -175,7 +206,8 @@ const playGame = (function () {
                     const third = document.querySelector(`.\\3${c[0]} ${c[1]}`);
                     third.style.backgroundColor = 'steelblue';
                     third.style.opacity = .5;
-                    const message = document.querySelector('.message');
+                    event.currentTarget.style.backgroundColor = 'white';
+                    event.currentTarget.style.opacity = 1;
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
                     message.textContent = `the computer wins the game!`;
@@ -198,35 +230,6 @@ const playGame = (function () {
             }
         })
     }
-    const reset = document.createElement('button');
-    reset.style.marginTop = `50px`;
-    reset.textContent = `Reset`;
-    reset.style.fontSize = `50px`;
-    reset.classList.add('btn');
-    reset.addEventListener('click', () => {
-        const markers = document.querySelectorAll('.marker');
-        for (mark of markers) {
-            mark.remove();
-        }
-        for (let i = 0; i < gameBoard.gameArray.length; i++) {
-            for (let j = 0; j < gameBoard.gameArray.length; j++) {
-                gameBoard.gameArray[i][j] = null;
-            }
-        }
-        for (item of render.board) {
-            item.style.backgroundColor = 'white';
-            item.style.opacity = 1;
-        }
-        human.moves.splice(0, human.moves.length);
-        CPU.moves.splice(0, CPU.moves.length);
-        isHumanTurn = true;
-        name = prompt('Please enter your name!');
-        if (name === null || name === '' || name === undefined) {
-            name = `Player1`;
-        }
-        gameOver = false;
-    })
-    body.appendChild(reset);
 })();
 
 function checkStatus(gameArray) {
