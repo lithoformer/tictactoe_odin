@@ -78,7 +78,7 @@ function Player(type, moves, gameArray) {
     this.makeMove = function (x, y) {
         if (gameArray[x][y] === null) { moves.push({ x: x, y: y }); return true; }
         else {
-            console.log(`board position occupied!`)
+            alert(`board position occupied!`);
             return false;
         }
     }
@@ -92,20 +92,22 @@ const playGame = (function () {
     let positionHuman = false;
     for (item of render.board) {
         item.addEventListener('click', (event) => {
-            const move = event.target.getAttribute('class');
+            const move = event.currentTarget.getAttribute('class');
             while (!checkStatus(gameBoard.gameArray) && isHumanTurn) {
                 positionHuman = human.makeMove(move[0], move[1]);
                 if (positionHuman) {
                     const x = document.createElement('span');
+                    x.classList.add('marker');
                     x.display = `flex`;
                     x.textContent = 'X';
                     x.style.fontSize = `150px`;
                     x.style.fontWeight = `bold`;
                     x.style.textAlign = `center`;
-                    event.target.appendChild(x);
+                    event.currentTarget.appendChild(x);
                     isHumanTurn = !isHumanTurn;
                     gameBoard.drawBoard(human);
-                } else {
+                }
+                else {
                     break;
                 }
             }
@@ -114,6 +116,7 @@ const playGame = (function () {
                 const y = rnd(3);
                 if (gameBoard.gameArray[x][y] === null) {
                     const o = document.createElement('span');
+                    o.classList.add('marker');
                     o.textContent = 'O';
                     o.style.fontSize = `150px`;
                     o.style.fontWeight = `bold`;
