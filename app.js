@@ -62,10 +62,14 @@ const render = (function () {
     const board = document.querySelectorAll('.boardSpace');
 
     for (item of board) {
+        item.style.display = `flex`;
         item.style.border = `5px solid slateblue`;
         item.style.height = `190px`;
         item.style.width = `190px`;
+        item.style.alignItems = `center`;
+        item.style.justifyContent = `center`;
     }
+    return { board }
 })();
 
 function Player(type, moves, gameArray) {
@@ -86,16 +90,20 @@ const playGame = (function () {
     let isHumanTurn = true;
     let positionCPU = false;
     let positionHuman = false;
-    const board = document.querySelectorAll('.boardSpace');
-    for (item of board) {
+    for (item of render.board) {
         item.addEventListener('click', (event) => {
             const move = event.target.getAttribute('class');
             while (!checkStatus(gameBoard.gameArray) && isHumanTurn) {
                 positionHuman = human.makeMove(move[0], move[1]);
                 if (positionHuman) {
-                    event.target.textContent = 'X';
+                    const x = document.createElement('span');
+                    x.display = `flex`;
+                    x.textContent = 'X';
+                    x.style.fontSize = `150px`;
+                    x.style.fontWeight = `bold`;
+                    x.style.textAlign = `center`;
+                    event.target.appendChild(x);
                     isHumanTurn = !isHumanTurn;
-                    positionHuman = !positionHuman;
                     gameBoard.drawBoard(human);
                 } else {
                     break;
@@ -105,9 +113,14 @@ const playGame = (function () {
                 const x = rnd(3);
                 const y = rnd(3);
                 if (gameBoard.gameArray[x][y] === null) {
+                    const o = document.createElement('span');
+                    o.textContent = 'O';
+                    o.style.fontSize = `150px`;
+                    o.style.fontWeight = `bold`;
+                    o.style.textAlign = `center`;
                     positionCPU = CPU.makeMove(x, y);
                     const pos = document.querySelector(`.\\3${x} ${y}`);
-                    pos.textContent = 'O';
+                    pos.appendChild(o);
                     isHumanTurn = !isHumanTurn;
                     gameBoard.drawBoard(CPU);
                 }
