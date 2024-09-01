@@ -89,46 +89,54 @@ function Player(type, moves, gameArray) {
 
 const playGame = (function () {
     const body = document.querySelector('body');
-
     const human = new Player('human', [], gameBoard.gameArray);
     const CPU = new Player('CPU', [], gameBoard.gameArray);
-    let gameOver = false;
+    const message = document.querySelector('.message');
+    const nameField = document.querySelector('.nameField');
+    let gameOver = true;
+    let playerName = 'Player1';
     const reset = document.createElement('button');
     reset.style.marginTop = `50px`;
     reset.textContent = `Reset`;
     reset.style.fontSize = `50px`;
     reset.classList.add('btn');
+    reset.classList.add('reset');
     reset.addEventListener('click', () => {
-        const markers = document.querySelectorAll('.marker');
-        for (mark of markers) {
-            mark.remove();
+        if (nameField.value === null || nameField.value === '' || nameField.value === undefined) {
+            playerName = 'Player1';
         }
-        for (let i = 0; i < gameBoard.gameArray.length; i++) {
-            for (let j = 0; j < gameBoard.gameArray.length; j++) {
-                gameBoard.gameArray[i][j] = null;
-            }
+        else {
+            playerName = nameField.value;
         }
-        for (item of render.board) {
-            item.style.backgroundColor = 'white';
-            item.style.opacity = 1;
-        }
-        human.moves.splice(0, human.moves.length);
-        CPU.moves.splice(0, CPU.moves.length);
+        nameField.value = '';
         isHumanTurn = true;
         gameOver = false;
+        restart();
     })
-    // const message = document.querySelector('.message');
-    // message.style.visiblity = 'visible';
-    // message.textContent = 'Please enter your name:'
-    // const nameField = document.querySelector('.nameField');
-    // nameField.style.visibility = 'visible';
-    // reset.textContent = 'Start!';
-    // if (nameField.value === null || nameField.value === '' || nameField.value === undefined) {
-    //     let name = `Player1`;
-    // }
-    body.appendChild(reset);
-
-    const message = document.querySelector('.message');
+    const start = document.createElement('button');
+    start.style.marginTop = `50px`;
+    start.textContent = `Start!`;
+    start.style.fontSize = `50px`;
+    start.classList.add('btn');
+    start.classList.add('start');
+    start.addEventListener('click', () => {
+        if (nameField.value === null || nameField.value === '' || nameField.value === undefined) {
+            playerName = 'Player1';
+        }
+        else {
+            playerName = nameField.value;
+        }
+        nameField.value = '';
+        isHumanTurn = true;
+        gameOver = false;
+        restart();
+    })
+    body.appendChild(start);
+    message.style.visibility = 'visible';
+    message.style.fontSize = `3rem`;
+    message.textContent = 'Please enter your name:'
+    nameField.style.visibility = 'visible';
+    nameField.style.fontSize = `3rem`;
     let isHumanTurn = true;
     let positionHuman = false;
     for (item of render.board) {
@@ -176,10 +184,12 @@ const playGame = (function () {
                         item.style.backgroundColor = 'steelblue';
                         item.style.opacity = .75;
                     }
-                    message.textContent = 'the game ends in a draw!'
+                    message.textContent = `the game ends in a draw!  Please enter your name:`;
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
-                    gameOver = true;
+                    nameField.style.visibility = 'visible';
+                    start.textContent = 'Start!'
+                    gameOver = !gameOver;
                 }
                 else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
                     const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
@@ -193,8 +203,10 @@ const playGame = (function () {
                     third.style.opacity = .5;
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
-                    message.textContent = `${name} wins the game!`;
-                    gameOver = true;
+                    message.textContent = `${name} wins the game!  Please enter your name:`;
+                    nameField.style.visibility = 'visible';
+                    start.textContent = 'Start!'
+                    gameOver = !gameOver;
                 }
                 else {
                     const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
@@ -210,13 +222,16 @@ const playGame = (function () {
                     event.currentTarget.style.opacity = 1;
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
-                    message.textContent = `the computer wins the game!`;
-                    gameOver = true;
+                    message.textContent = `the computer wins the game!  Please enter your name:`;
+                    nameField.style.visibility = 'visible';
+                    start.textContent = 'Start!'
+                    gameOver = !gameOver;
                 }
             }
         })
 
         item.addEventListener('mouseenter', (event) => {
+            console.log(gameOver);
             if (!gameOver) {
                 event.currentTarget.style.backgroundColor = 'slategrey';
                 event.currentTarget.style.opacity = .5;
@@ -224,12 +239,14 @@ const playGame = (function () {
         })
 
         item.addEventListener('mouseleave', (event) => {
+            console.log(gameOver);
             if (!gameOver) {
                 event.currentTarget.style.backgroundColor = 'white';
                 event.currentTarget.style.opacity = 1;
             }
         })
     }
+    return { human, CPU, playerName }
 })();
 
 function checkStatus(gameArray) {
@@ -258,4 +275,32 @@ function checkStatus(gameArray) {
 
 function rnd(val) {
     return Math.floor(Math.random() * val);
+}
+
+function restart() {
+    const markers = document.querySelectorAll('.marker');
+    const nameField = document.querySelectorAll('.nameField');
+    const message = document.querySelectorAll('.message');
+    for (mark of markers) {
+        mark.remove();
+    }
+    for (let i = 0; i < gameBoard.gameArray.length; i++) {
+        for (let j = 0; j < gameBoard.gameArray.length; j++) {
+            gameBoard.gameArray[i][j] = null;
+        }
+    }
+    for (item of render.board) {
+        item.style.backgroundColor = 'white';
+        item.style.opacity = 1;
+    }
+    playGame.human.moves.splice(0, playGame.human.moves.length);
+    playGame.CPU.moves.splice(0, playGame.CPU.moves.length);
+    isHumanTurn = true;
+    gameOver = false;
+    document.querySelector('.message').style.visibility = 'hidden';
+    document.querySelector('.nameField').style.visibility = 'hidden';
+    const start = document.querySelector('.start');
+    const body = document.querySelector('body');
+    body.appendChild(start);
+    start.textContent = 'Reset';
 }
