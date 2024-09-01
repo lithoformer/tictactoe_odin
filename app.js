@@ -69,7 +69,7 @@ const render = (function () {
         item.style.alignItems = `center`;
         item.style.justifyContent = `center`;
     }
-    return { board }
+    return { board, gameContainer }
 })();
 
 function Player(type, moves, gameArray) {
@@ -85,6 +85,7 @@ function Player(type, moves, gameArray) {
 }
 
 const playGame = (function () {
+    const body = document.querySelector('body');
     const human = new Player('human', [], gameBoard.gameArray);
     const CPU = new Player('CPU', [], gameBoard.gameArray);
     let isHumanTurn = true;
@@ -130,6 +131,25 @@ const playGame = (function () {
             }
         })
     }
+    const reset = document.createElement('button');
+    reset.style.marginTop = `50px`;
+    reset.textContent = `Reset Game`;
+    reset.classList.add('btn');
+    reset.addEventListener('click', () => {
+        const markers = document.querySelectorAll('.marker');
+        for (mark of markers) {
+            mark.remove();
+        }
+        for (let i = 0; i < gameBoard.gameArray.length; i++) {
+            for (let j = 0; j < gameBoard.gameArray.length; j++) {
+                gameBoard.gameArray[i][j] = null;
+            }
+        }
+        human.moves.splice(0, human.moves.length);
+        CPU.moves.splice(0, CPU.moves.length);
+        isHumanTurn = true;
+    })
+    body.appendChild(reset);
 })();
 
 function checkStatus(gameArray) {
