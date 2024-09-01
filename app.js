@@ -81,7 +81,7 @@ function Player(type, moves, gameArray) {
     this.makeMove = function (x, y) {
         if (gameArray[x][y] === null) { moves.push({ x: x, y: y }); return true; }
         else {
-            alert(`board position occupied!`);
+            render.gameContainer.classList.add(`apply-shake`);
             return false;
         }
     }
@@ -97,6 +97,7 @@ const playGame = (function () {
     }
     let isHumanTurn = true;
     let positionHuman = false;
+    let gameOver = false;
     for (item of render.board) {
         item.addEventListener('click', (event) => {
             const move = event.currentTarget.getAttribute('class');
@@ -113,6 +114,7 @@ const playGame = (function () {
                     event.currentTarget.appendChild(x);
                     isHumanTurn = !isHumanTurn;
                     gameBoard.drawBoard(human);
+                    render.gameContainer.classList.remove(`apply-shake`);
                 }
                 else {
                     break;
@@ -145,6 +147,7 @@ const playGame = (function () {
                     message.textContent = 'the game ends in a draw!'
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
+                    gameOver = true;
                 }
                 else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
                     const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
@@ -160,6 +163,7 @@ const playGame = (function () {
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
                     message.textContent = `${name} wins the game!`;
+                    gameOver = true;
                 }
                 else {
                     const first = document.querySelector(`.\\3${a[0]} ${a[1]}`);
@@ -175,7 +179,22 @@ const playGame = (function () {
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
                     message.textContent = `the computer wins the game!`;
+                    gameOver = true;
                 }
+            }
+        })
+
+        item.addEventListener('mouseenter', (event) => {
+            if (!gameOver) {
+                event.currentTarget.style.backgroundColor = 'slategrey';
+                event.currentTarget.style.opacity = .5;
+            }
+        })
+
+        item.addEventListener('mouseleave', (event) => {
+            if (!gameOver) {
+                event.currentTarget.style.backgroundColor = 'white';
+                event.currentTarget.style.opacity = 1;
             }
         })
     }
@@ -205,6 +224,7 @@ const playGame = (function () {
         if (name === null || name === '' || name === undefined) {
             name = `Player1`;
         }
+        gameOver = false;
     })
     body.appendChild(reset);
 })();
