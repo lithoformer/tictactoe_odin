@@ -44,22 +44,21 @@ function playGame() {
             const x = prompt(`enter x coord`);
             const y = prompt(`enter y coord`);
             human.makeMove(x, y);
-            console.log('human move')
-            isHumanTurn = false;
-        } else if (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
+            isHumanTurn = !isHumanTurn;
+        }
+        if (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
             while (!checkStatus(gameBoard.gameArray) && !positionFound) {
                 const x = rnd(3);
                 const y = rnd(3);
                 if (gameBoard.gameArray[x][y] === null) {
                     CPU.makeMove(x, y);
-                    console.log('cpu move')
                     positionFound = true;
-                    break;
                 }
             }
-            isHumanTurn = true;
+            isHumanTurn = !isHumanTurn;
+            positionFound = !positionFound;
         }
-        else if (checkStatus(gameBoard.gameArray)) {
+        if (checkStatus(gameBoard.gameArray)) {
             console.log(`game over!`);
         }
     }
