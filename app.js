@@ -203,7 +203,7 @@ const playGame = (function () {
                     third.style.opacity = .5;
                     message.style.fontSize = `3rem`;
                     message.style.visibility = `visible`;
-                    message.textContent = `${name} wins the game!  Please enter your name:`;
+                    message.textContent = `${playerName} wins the game!  Please enter your name:`;
                     nameField.style.visibility = 'visible';
                     start.textContent = 'Start!'
                     gameOver = !gameOver;
@@ -231,7 +231,7 @@ const playGame = (function () {
         })
 
         item.addEventListener('mouseenter', (event) => {
-            console.log(gameOver);
+            console.log(playerName);
             if (!gameOver) {
                 event.currentTarget.style.backgroundColor = 'slategrey';
                 event.currentTarget.style.opacity = .5;
@@ -239,7 +239,7 @@ const playGame = (function () {
         })
 
         item.addEventListener('mouseleave', (event) => {
-            console.log(gameOver);
+            console.log(playerName);
             if (!gameOver) {
                 event.currentTarget.style.backgroundColor = 'white';
                 event.currentTarget.style.opacity = 1;
@@ -279,8 +279,6 @@ function rnd(val) {
 
 function restart() {
     const markers = document.querySelectorAll('.marker');
-    const nameField = document.querySelectorAll('.nameField');
-    const message = document.querySelectorAll('.message');
     for (mark of markers) {
         mark.remove();
     }
