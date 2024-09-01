@@ -181,7 +181,8 @@ const playGame = (function () {
     }
     const reset = document.createElement('button');
     reset.style.marginTop = `50px`;
-    reset.textContent = `Reset Game`;
+    reset.textContent = `Reset`;
+    reset.style.fontSize = `50px`;
     reset.classList.add('btn');
     reset.addEventListener('click', () => {
         const markers = document.querySelectorAll('.marker');
@@ -200,6 +201,10 @@ const playGame = (function () {
         human.moves.splice(0, human.moves.length);
         CPU.moves.splice(0, CPU.moves.length);
         isHumanTurn = true;
+        name = prompt('Please enter your name!');
+        if (name === null || name === '' || name === undefined) {
+            name = `Player1`;
+        }
     })
     body.appendChild(reset);
 })();
