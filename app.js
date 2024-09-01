@@ -1,4 +1,3 @@
-
 const gameBoard = (function () {
     const gameArray = new Array(3);
     for (let i = 0; i < gameArray.length; i++) {
@@ -20,13 +19,63 @@ const gameBoard = (function () {
     return { drawBoard, gameArray }
 })();
 
+const render = (function () {
+    const gameContainer = document.querySelector('.gameContainer');
+
+    const aa = document.createElement('div');
+    aa.classList.add('00');
+    aa.classList.add('boardSpace');
+    gameContainer.appendChild(aa);
+    const ab = document.createElement('div');
+    ab.classList.add('01');
+    ab.classList.add('boardSpace');
+    gameContainer.appendChild(ab);
+    const ac = document.createElement('div');
+    ac.classList.add('02');
+    ac.classList.add('boardSpace');
+    gameContainer.appendChild(ac);
+    const ba = document.createElement('div');
+    ba.classList.add('10');
+    ba.classList.add('boardSpace');
+    gameContainer.appendChild(ba);
+    const bb = document.createElement('div');
+    bb.classList.add('11');
+    bb.classList.add('boardSpace');
+    gameContainer.appendChild(bb);
+    const bc = document.createElement('div');
+    bc.classList.add('12');
+    bc.classList.add('boardSpace');
+    gameContainer.appendChild(bc);
+    const ca = document.createElement('div');
+    ca.classList.add('20');
+    ca.classList.add('boardSpace');
+    gameContainer.appendChild(ca);
+    const cb = document.createElement('div');
+    cb.classList.add('21');
+    cb.classList.add('boardSpace');
+    gameContainer.appendChild(cb);
+    const cc = document.createElement('div');
+    cc.classList.add('22');
+    cc.classList.add('boardSpace');
+    gameContainer.appendChild(cc);
+
+    const board = document.querySelectorAll('.boardSpace');
+
+    for (item of board) {
+        item.style.border = `5px solid slateblue`;
+        item.style.height = `190px`;
+        item.style.width = `190px`;
+    }
+})();
+
 function Player(type, moves, gameArray) {
     this.type = type;
     this.moves = moves;
     this.makeMove = function (x, y) {
-        if (gameArray[x][y] === null) { moves.push({ x: x, y: y }); }
+        if (gameArray[x][y] === null) { moves.push({ x: x, y: y }); return true; }
         else {
             console.log(`board position occupied!`)
+            return false;
         }
     }
 }
@@ -34,33 +83,36 @@ function Player(type, moves, gameArray) {
 const playGame = (function () {
     const human = new Player('human', [], gameBoard.gameArray);
     const CPU = new Player('CPU', [], gameBoard.gameArray);
-    let isHumanTurn = false;
-    let positionFound = false;
-    while (!checkStatus(gameBoard.gameArray)) {
-        gameBoard.drawBoard(human);
-        gameBoard.drawBoard(CPU);
-        if (!checkStatus(gameBoard.gameArray) && isHumanTurn) {
-            const x = prompt(`enter x coord`);
-            const y = prompt(`enter y coord`);
-            human.makeMove(x, y);
-            isHumanTurn = !isHumanTurn;
-        }
-        if (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
-            while (!checkStatus(gameBoard.gameArray) && !positionFound) {
+    let isHumanTurn = true;
+    let positionCPU = false;
+    let positionHuman = false;
+    const board = document.querySelectorAll('.boardSpace');
+    for (item of board) {
+        item.addEventListener('click', (event) => {
+            const move = event.target.getAttribute('class');
+            while (!checkStatus(gameBoard.gameArray) && isHumanTurn) {
+                positionHuman = human.makeMove(move[0], move[1]);
+                if (positionHuman) {
+                    event.target.textContent = 'X';
+                    isHumanTurn = !isHumanTurn;
+                    positionHuman = !positionHuman;
+                    gameBoard.drawBoard(human);
+                } else {
+                    break;
+                }
+            }
+            while (!checkStatus(gameBoard.gameArray) && !isHumanTurn) {
                 const x = rnd(3);
                 const y = rnd(3);
                 if (gameBoard.gameArray[x][y] === null) {
-                    CPU.makeMove(x, y);
-                    positionFound = true;
+                    positionCPU = CPU.makeMove(x, y);
+                    const pos = document.querySelector(`.\\3${x} ${y}`);
+                    pos.textContent = 'O';
+                    isHumanTurn = !isHumanTurn;
+                    gameBoard.drawBoard(CPU);
                 }
             }
-            isHumanTurn = !isHumanTurn;
-            positionFound = !positionFound;
-        }
-        if (checkStatus(gameBoard.gameArray)) {
-            console.log(`game over!`);
-        }
-        console.log(gameBoard.gameArray)
+        })
     }
 })();
 
