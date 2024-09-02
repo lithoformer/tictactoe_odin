@@ -81,8 +81,7 @@ function Player(name, type, moves, gameArray) {
     this.moves = moves;
     this.makeMove = function (x, y) {
         if (gameArray[x][y] === null) { moves.push({ x: x, y: y }); return true; }
-        else if (gameArray[x][y] !== null) {
-            // render.gameContainer.classList.add(`apply-shake`);
+        else {
             return false;
         }
     }
@@ -129,16 +128,16 @@ const playGame = (function () {
     nameField[0].style.visibility = `visible`;
     nameField[1].style.fontSize = `3rem`;
     nameField[1].style.visibility = `visible`;
-    let isPlayerOneTurn = true;
-    let positionOne = false;
-    let positionTwo = false;
+    let isPlayerOneTurn = null;
+    let position = null;
+    let move = null;
     for (item of render.board) {
-        item.addEventListener('click', (event) => {
+        item.addEventListener('mousedown', (event) => {
             if (!gameOver) {
-                const move = event.currentTarget.getAttribute('class');
+                move = event.currentTarget.getAttribute('class');
                 while (!checkStatus(gameBoard.gameArray) && isPlayerOneTurn) {
-                    positionOne = player1.makeMove(move[0], move[1]);
-                    if (positionOne) {
+                    position = player1.makeMove(move[0], move[1]);
+                    if (position) {
                         const x = document.createElement('span');
                         x.classList.add('marker');
                         x.display = `flex`;
@@ -149,15 +148,14 @@ const playGame = (function () {
                         event.currentTarget.appendChild(x);
                         isPlayerOneTurn = !isPlayerOneTurn;
                         gameBoard.drawBoard(player1);
-                        // render.gameContainer.classList.remove(`apply-shake`);
                     }
-                    else {
+                    else if (!position) {
                         break;
                     }
                 }
                 while (!checkStatus(gameBoard.gameArray) && !isPlayerOneTurn) {
-                    positionTwo = player2.makeMove(move[0], move[1]);
-                    if (positionTwo) {
+                    position = player2.makeMove(move[0], move[1]);
+                    if (position) {
                         const o = document.createElement('span');
                         o.classList.add('marker');
                         o.display = `flex`;
@@ -168,9 +166,8 @@ const playGame = (function () {
                         event.currentTarget.appendChild(o);
                         isPlayerOneTurn = !isPlayerOneTurn;
                         gameBoard.drawBoard(player2);
-                        // render.gameContainer.classList.remove(`apply-shake`);
                     }
-                    else {
+                    else if (!position) {
                         break;
                     }
                 }
