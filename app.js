@@ -94,13 +94,16 @@ const playGame = (function () {
     const message = document.querySelector('.message');
     const nameField = document.querySelectorAll('.nameField');
     let gameOver = true;
+    let isPlayerOneTurn = null;
+    let position = null;
+    let move = null;
     const start = document.createElement('button');
     start.style.marginTop = `50px`;
     start.textContent = `Start!`;
     start.style.fontSize = `50px`;
     start.classList.add('btn');
     start.classList.add('start');
-    start.addEventListener('click', (e) => {
+    start.addEventListener('click', () => {
         if (nameField[0].value === null || nameField[0].value === '' || nameField[0].value === undefined) {
             player1.name = 'Player1';
         }
@@ -116,8 +119,8 @@ const playGame = (function () {
         nameField[0].value = '';
         nameField[1].value = '';
         isPlayerOneTurn = true;
-        gameOver = false;
-        e.target.textContent = `Start!`
+        gameOver = !gameOver;
+        toggleText(start);
         restart();
     })
     body.appendChild(start);
@@ -128,9 +131,6 @@ const playGame = (function () {
     nameField[0].style.visibility = `visible`;
     nameField[1].style.fontSize = `3rem`;
     nameField[1].style.visibility = `visible`;
-    let isPlayerOneTurn = null;
-    let position = null;
-    let move = null;
     for (item of render.board) {
         item.addEventListener('mousedown', (event) => {
             if (!gameOver) {
@@ -179,7 +179,8 @@ const playGame = (function () {
                         }
                         message.textContent = `the game ends in a draw!  Please enter your names:`;
                         message.style.fontSize = `3rem`;
-                        toggleVisibility(message, nameField);
+                        toggleVisibilityMsg(playGame.message);
+                        toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
                     else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
@@ -194,7 +195,8 @@ const playGame = (function () {
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
                         message.textContent = `${player1.name} wins the game!  Please enter your names:`;
-                        toggleVisibility(message, nameField);
+                        toggleVisibilityMsg(playGame.message);
+                        toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
                     else {
@@ -209,7 +211,8 @@ const playGame = (function () {
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
                         message.textContent = `${player2.name} wins the game!  Please enter your names:`;
-                        toggleVisibility(message, nameField);
+                        toggleVisibilityMsg(playGame.message);
+                        toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
                 }
@@ -230,7 +233,7 @@ const playGame = (function () {
             }
         })
     }
-    return { player1, player2, message, nameField }
+    return { player1, player2, message, nameField, gameOver }
 })();
 
 function checkStatus(gameArray) {
@@ -278,17 +281,20 @@ function restart() {
     playGame.player1.moves.splice(0, playGame.player1.moves.length);
     playGame.player2.moves.splice(0, playGame.player2.moves.length);
     isPlayerOneTurn = true;
-    gameOver = false;
+    playGame.gameOver = !playGame.gameOver;
     playGame.message.textContent = `Players enter your names:`;
-    toggleVisibility(playGame.message, playGame.nameField);
+    toggleVisibilityMsg(playGame.message);
+    toggleVisibilityName(playGame.nameField);
 }
 
-function toggleVisibility(message, nameField) {
+function toggleVisibilityMsg(message) {
     if (message.style.visibility === `visible`) {
         message.style.visibility = `hidden`;
     } else if (message.style.visibility === `hidden`) {
         message.style.visibility = `visible`;
     }
+}
+function toggleVisibilityName(nameField) {
     if (nameField[0].style.visibility === `visible`) {
         nameField[0].style.visibility = `hidden`;
     } else if (nameField[0].style.visibility === `hidden`) {
@@ -299,8 +305,6 @@ function toggleVisibility(message, nameField) {
     } else if (nameField[1].style.visibility === `hidden`) {
         nameField[1].style.visibility = `visible`;
     }
-    const start = document.querySelector('.start');
-    toggleText(start);
 }
 
 function toggleText(start) {
