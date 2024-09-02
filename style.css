@@ -48,11 +48,11 @@ body {
     box-shadow: 5px 5px 5px 5px rgba(100, 100, 100, .5);
 }
 
-.message {
+.message,
+.p1message {
     text-align: center;
     height: 50px;
     width: 1500px;
-    visibility: hidden;
 }
 
 .nameField {

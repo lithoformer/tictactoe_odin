@@ -80,7 +80,10 @@ function Player(name, type, moves, gameArray) {
     this.type = type;
     this.moves = moves;
     this.makeMove = function (x, y) {
-        if (gameArray[x][y] === null) { moves.push({ x: x, y: y }); return true; }
+        if (gameArray[x][y] === null) {
+            moves.push({ x: x, y: y });
+            return true;
+        }
         else {
             return false;
         }
@@ -93,6 +96,7 @@ const playGame = (function () {
     const player2 = new Player('', 'player2', [], gameBoard.gameArray);
     const message = document.querySelector('.message');
     const nameField = document.querySelectorAll('.nameField');
+    const p1message = document.querySelector('.p1message');
     let gameOver = true;
     let isPlayerOneTurn = null;
     let positionOne = null;
@@ -104,7 +108,7 @@ const playGame = (function () {
     start.style.fontSize = `50px`;
     start.classList.add('btn');
     start.classList.add('start');
-    start.addEventListener('click', () => {
+    start.addEventListener('click', (event) => {
         if (nameField[0].value === null || nameField[0].value === '' || nameField[0].value === undefined) {
             player1.name = 'Player1';
         }
@@ -121,9 +125,11 @@ const playGame = (function () {
         nameField[1].value = '';
         isPlayerOneTurn = true;
         gameOver = !gameOver;
-        toggleVisibilityMsg(message);
         toggleText(start);
         restart();
+        if (event.currentTarget.textContent === 'Start!') {
+            p1message.style.visibility = `hidden`;
+        }
     })
     body.appendChild(start);
     message.style.visibility = `visible`;
@@ -149,6 +155,8 @@ const playGame = (function () {
                         x.style.textAlign = `center`;
                         event.currentTarget.appendChild(x);
                         isPlayerOneTurn = !isPlayerOneTurn;
+                        const p1message = document.querySelector('.p1message');
+                        p1message.textContent = `${playGame.player2.name}'s turn`;
                         gameBoard.drawBoard(player1);
                     }
                     else if (!positionOne) {
@@ -167,6 +175,8 @@ const playGame = (function () {
                         o.style.textAlign = `center`;
                         event.currentTarget.appendChild(o);
                         isPlayerOneTurn = !isPlayerOneTurn;
+                        const p1message = document.querySelector('.p1message');
+                        p1message.textContent = `${playGame.player1.name}'s turn`;
                         gameBoard.drawBoard(player2);
                     }
                     else if (!positionTwo) {
@@ -179,7 +189,8 @@ const playGame = (function () {
                             item.style.backgroundColor = 'steelblue';
                             item.style.opacity = .75;
                         }
-                        message.textContent = `the game ends in a draw!  Please enter your names:`;
+                        document.querySelector('.p1message').textContent = `The game ends in a draw!`;
+                        message.textContent = `Please enter your names:`;
                         message.style.fontSize = `3rem`;
                         toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
@@ -197,7 +208,8 @@ const playGame = (function () {
                         third.style.backgroundColor = 'goldenrod';
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
-                        message.textContent = `${player1.name} wins the game!  Please enter your names:`;
+                        document.querySelector('.p1message').textContent = `${player1.name} wins the game!`;
+                        message.textContent = `Players enter your names:`;
                         toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         toggleText(start);
@@ -214,7 +226,8 @@ const playGame = (function () {
                         third.style.backgroundColor = 'goldenrod';
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
-                        message.textContent = `${player2.name} wins the game!  Please enter your names:`;
+                        document.querySelector('.p1message').textContent = `${player2.name} wins the game!`;
+                        message.textContent = `Players enter your names:`;
                         toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         toggleText(start);
@@ -238,7 +251,7 @@ const playGame = (function () {
             }
         })
     }
-    return { player1, player2, message, nameField, gameOver }
+    return { player1, player2, message, nameField, gameOver, p1message }
 })();
 
 function checkStatus(gameArray) {
@@ -265,10 +278,6 @@ function checkStatus(gameArray) {
     }
 }
 
-function rnd(val) {
-    return Math.floor(Math.random() * val);
-}
-
 function restart() {
     const markers = document.querySelectorAll('.marker');
     for (mark of markers) {
@@ -286,9 +295,13 @@ function restart() {
     playGame.player1.moves.splice(0, playGame.player1.moves.length);
     playGame.player2.moves.splice(0, playGame.player2.moves.length);
     isPlayerOneTurn = true;
-    playGame.gameOver = !playGame.gameOver;
+    playGame.gameOver = false;
     playGame.message.textContent = `Players enter your names:`;
+    toggleVisibilityMsg(playGame.message);
     toggleVisibilityName(playGame.nameField);
+    playGame.p1message.style.visibility = `visible`;
+    playGame.p1message.style.fontSize = `3rem`;
+    playGame.p1message.textContent = `${playGame.player1.name}'s turn`;
 }
 
 function toggleVisibilityMsg(message) {
