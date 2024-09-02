@@ -95,24 +95,6 @@ const playGame = (function () {
     const nameField = document.querySelector('.nameField');
     let gameOver = true;
     let playerName = 'Player1';
-    const reset = document.createElement('button');
-    reset.style.marginTop = `50px`;
-    reset.textContent = `Reset`;
-    reset.style.fontSize = `50px`;
-    reset.classList.add('btn');
-    reset.classList.add('reset');
-    reset.addEventListener('click', () => {
-        if (nameField.value === null || nameField.value === '' || nameField.value === undefined) {
-            playerName = 'Player1';
-        }
-        else {
-            playerName = nameField.value;
-        }
-        nameField.value = '';
-        isHumanTurn = true;
-        gameOver = false;
-        restart();
-    })
     const start = document.createElement('button');
     start.style.marginTop = `50px`;
     start.textContent = `Start!`;
@@ -129,6 +111,7 @@ const playGame = (function () {
         nameField.value = '';
         isHumanTurn = true;
         gameOver = false;
+        start.textContent = 'Start!';
         restart();
     })
     body.appendChild(start);
@@ -244,7 +227,7 @@ const playGame = (function () {
             }
         })
     }
-    return { human, CPU, playerName }
+    return { human, CPU, message, nameField }
 })();
 
 function checkStatus(gameArray) {
@@ -293,10 +276,21 @@ function restart() {
     playGame.CPU.moves.splice(0, playGame.CPU.moves.length);
     isHumanTurn = true;
     gameOver = false;
-    document.querySelector('.message').style.visibility = 'hidden';
-    document.querySelector('.nameField').style.visibility = 'hidden';
+    toggleVisibility(playGame.message, playGame.nameField);
     const start = document.querySelector('.start');
-    const body = document.querySelector('body');
-    body.appendChild(start);
     start.textContent = 'Reset';
+}
+
+function toggleVisibility(message, nameField) {
+    if (message.style.visibility === `visible`) {
+        message.style.visibility = `hidden`;
+    } else if (message.style.visibility === `hidden`) {
+        message.style.visibility = `visible`;
+    }
+    if (nameField.style.visibility === `visible`) {
+        nameField.style.visibility = `hidden`;
+    } else if (nameField.style.visibility === `hidden`) {
+        nameField.style.visibility = `visible`;
+    }
+    message.textContent = `Please enter your name:`;
 }
