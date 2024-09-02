@@ -120,10 +120,10 @@ const playGame = (function () {
         nameField[1].value = '';
         isPlayerOneTurn = true;
         gameOver = !gameOver;
+        toggleVisibilityMsg(message);
         toggleText(start);
         restart();
-        message.textContent = `${player1.name} turn`;
-        toggleVisibilityMsg(message);
+        // message.textContent = `Players enter your names`;
     })
     body.appendChild(start);
     message.style.visibility = `visible`;
@@ -183,6 +183,7 @@ const playGame = (function () {
                         }
                         message.textContent = `the game ends in a draw!  Please enter your names:`;
                         message.style.fontSize = `3rem`;
+                        toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
@@ -198,6 +199,7 @@ const playGame = (function () {
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
                         message.textContent = `${player1.name} wins the game!  Please enter your names:`;
+                        toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
@@ -213,6 +215,7 @@ const playGame = (function () {
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
                         message.textContent = `${player2.name} wins the game!  Please enter your names:`;
+                        toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
@@ -284,7 +287,7 @@ function restart() {
     isPlayerOneTurn = true;
     playGame.gameOver = !playGame.gameOver;
     playGame.message.textContent = `Players enter your names:`;
-    toggleVisibilityMsg(playGame.message);
+    // toggleVisibilityMsg(playGame.message);
     toggleVisibilityName(playGame.nameField);
 }
 
