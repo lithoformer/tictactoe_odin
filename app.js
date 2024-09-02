@@ -122,6 +122,8 @@ const playGame = (function () {
         gameOver = !gameOver;
         toggleText(start);
         restart();
+        message.textContent = `${player1.name} turn`;
+        toggleVisibilityMsg(message);
     })
     body.appendChild(start);
     message.style.visibility = `visible`;
@@ -146,6 +148,7 @@ const playGame = (function () {
                         x.style.fontWeight = `bold`;
                         x.style.textAlign = `center`;
                         event.currentTarget.appendChild(x);
+                        message.textContent = `${player2.name} turn`
                         isPlayerOneTurn = !isPlayerOneTurn;
                         gameBoard.drawBoard(player1);
                     }
@@ -164,6 +167,7 @@ const playGame = (function () {
                         o.style.fontWeight = `bold`;
                         o.style.textAlign = `center`;
                         event.currentTarget.appendChild(o);
+                        message.textContent = `${player1.name} turn`
                         isPlayerOneTurn = !isPlayerOneTurn;
                         gameBoard.drawBoard(player2);
                     }
@@ -179,7 +183,6 @@ const playGame = (function () {
                         }
                         message.textContent = `the game ends in a draw!  Please enter your names:`;
                         message.style.fontSize = `3rem`;
-                        toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
@@ -195,7 +198,6 @@ const playGame = (function () {
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
                         message.textContent = `${player1.name} wins the game!  Please enter your names:`;
-                        toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
@@ -211,7 +213,6 @@ const playGame = (function () {
                         third.style.opacity = .5;
                         message.style.fontSize = `3rem`;
                         message.textContent = `${player2.name} wins the game!  Please enter your names:`;
-                        toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
                         gameOver = true;
                     }
