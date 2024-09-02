@@ -95,7 +95,8 @@ const playGame = (function () {
     const nameField = document.querySelectorAll('.nameField');
     let gameOver = true;
     let isPlayerOneTurn = null;
-    let position = null;
+    let positionOne = null;
+    let positionTwo = null
     let move = null;
     const start = document.createElement('button');
     start.style.marginTop = `50px`;
@@ -123,7 +124,6 @@ const playGame = (function () {
         toggleVisibilityMsg(message);
         toggleText(start);
         restart();
-        // message.textContent = `Players enter your names`;
     })
     body.appendChild(start);
     message.style.visibility = `visible`;
@@ -138,8 +138,8 @@ const playGame = (function () {
             if (!gameOver) {
                 move = event.currentTarget.getAttribute('class');
                 while (!checkStatus(gameBoard.gameArray) && isPlayerOneTurn) {
-                    position = player1.makeMove(move[0], move[1]);
-                    if (position) {
+                    positionOne = player1.makeMove(move[0], move[1]);
+                    if (positionOne) {
                         const x = document.createElement('span');
                         x.classList.add('marker');
                         x.display = `flex`;
@@ -148,17 +148,16 @@ const playGame = (function () {
                         x.style.fontWeight = `bold`;
                         x.style.textAlign = `center`;
                         event.currentTarget.appendChild(x);
-                        message.textContent = `${player2.name} turn`
                         isPlayerOneTurn = !isPlayerOneTurn;
                         gameBoard.drawBoard(player1);
                     }
-                    else if (!position) {
+                    else if (!positionOne) {
                         break;
                     }
                 }
                 while (!checkStatus(gameBoard.gameArray) && !isPlayerOneTurn) {
-                    position = player2.makeMove(move[0], move[1]);
-                    if (position) {
+                    positionTwo = player2.makeMove(move[0], move[1]);
+                    if (positionTwo) {
                         const o = document.createElement('span');
                         o.classList.add('marker');
                         o.display = `flex`;
@@ -167,11 +166,10 @@ const playGame = (function () {
                         o.style.fontWeight = `bold`;
                         o.style.textAlign = `center`;
                         event.currentTarget.appendChild(o);
-                        message.textContent = `${player1.name} turn`
                         isPlayerOneTurn = !isPlayerOneTurn;
                         gameBoard.drawBoard(player2);
                     }
-                    else if (!position) {
+                    else if (!positionTwo) {
                         break;
                     }
                 }
@@ -185,6 +183,7 @@ const playGame = (function () {
                         message.style.fontSize = `3rem`;
                         toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
+                        toggleText(start);
                         gameOver = true;
                     }
                     else if (gameBoard.gameArray[a[0]][a[1]] === 1) {
@@ -201,6 +200,7 @@ const playGame = (function () {
                         message.textContent = `${player1.name} wins the game!  Please enter your names:`;
                         toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
+                        toggleText(start);
                         gameOver = true;
                     }
                     else {
@@ -217,6 +217,7 @@ const playGame = (function () {
                         message.textContent = `${player2.name} wins the game!  Please enter your names:`;
                         toggleVisibilityMsg(playGame.message);
                         toggleVisibilityName(playGame.nameField);
+                        toggleText(start);
                         gameOver = true;
                     }
                 }
@@ -287,7 +288,6 @@ function restart() {
     isPlayerOneTurn = true;
     playGame.gameOver = !playGame.gameOver;
     playGame.message.textContent = `Players enter your names:`;
-    // toggleVisibilityMsg(playGame.message);
     toggleVisibilityName(playGame.nameField);
 }
 
